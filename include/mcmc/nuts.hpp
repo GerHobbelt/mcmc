@@ -19,15 +19,14 @@
   ################################################################################*/
  
 /*
- * Metropolis-adjusted Langevin algorithm
+ * No-U-Turn Sampler (NUTS) (with Dual Averaging)
  */
 
-#ifndef _mcmc_mala_HPP
-#define _mcmc_mala_HPP
-
+#ifndef _mcmc_nuts_HPP
+#define _mcmc_nuts_HPP
 
 /**
- * @brief The Metropolis-adjusted Langevin Algorithm (MALA)
+ * @brief The No-U-Turn Sampler (NUTS) MCMC Algorithm
  *
  * @param initial_vals a column vector of initial values.
  * @param target_log_kernel the log posterior kernel function of the target distribution, taking three arguments:
@@ -41,7 +40,7 @@
  */ 
 
 bool
-mala(
+nuts(
     const ColVec_t& initial_vals, 
     std::function<fp_t (const ColVec_t& vals_inp, ColVec_t* grad_out, void* target_data)> target_log_kernel, 
     Mat_t& draws_out, 
@@ -49,7 +48,7 @@ mala(
 );
 
 /**
- * @brief The Metropolis-adjusted Langevin Algorithm (MALA)
+ * @brief The No-U-Turn Sampler (NUTS) MCMC Algorithm
  *
  * @param initial_vals a column vector of initial values.
  * @param target_log_kernel the log posterior kernel function of the target distribution, taking three arguments:
@@ -64,7 +63,7 @@ mala(
  */ 
 
 bool
-mala(
+nuts(
     const ColVec_t& initial_vals, 
     std::function<fp_t (const ColVec_t& vals_inp, ColVec_t* grad_out, void* target_data)> target_log_kernel, 
     Mat_t& draws_out, 
@@ -77,7 +76,7 @@ namespace internal
 {
 
 bool
-mala_impl(
+nuts_impl(
     const ColVec_t& initial_vals, 
     std::function<fp_t (const ColVec_t& vals_inp, ColVec_t* grad_out, void* target_data)> target_log_kernel, 
     Mat_t& draws_out, 
@@ -85,12 +84,9 @@ mala_impl(
     algo_settings_t* settings_inp
 );
 
-#include "mala.ipp"
+#include "nuts.ipp"
 
 }
 
-//
-
-
-
 #endif
+ 

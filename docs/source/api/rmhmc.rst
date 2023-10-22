@@ -1,8 +1,10 @@
-.. Copyright (c) 2011-2022 Keith O'Hara
+.. Copyright (c) 2011-2023 Keith O'Hara
 
    Distributed under the terms of the Apache License, Version 2.0.
 
    The full license is in the file LICENSE, distributed with this software.
+
+.. _riemannian-manifold-hmc:
 
 Riemannian Manifold HMC
 =======================
@@ -56,25 +58,17 @@ The RM-HMC algorithm proceeds in three steps.
 
         p^{(*)} = p_h^{(*)} + \epsilon \times \nabla_\theta H \left\{ \theta^{(*)},p_h^{(*)} \right\}
 
-3. (**Accept/Reject Step**) Denote the Hamiltonian by
+3. (**Accept/Reject Step**) Define
 
   .. math::
 
-    H(\theta, p) := \frac{1}{2} \log \left\{ (2 \pi)^d | \mathbf{M} | \right\} + \frac{1}{2} p^\top \mathbf{M}^{-1} p - \ln K(\theta | X) 
-
-  and define
-
-  .. math::
-
-    \alpha = \min \left\{ 1, \exp( H(\theta^{(i)}, p^{(i)}) - H(\theta^{(*)}, p^{(*)}) ) \right\}
+    \alpha = \min \left\{ 1, \exp \left( H \left\{ \theta^{(i)}, p^{(i)} \right\} - H \left\{ \theta^{(*)}, p^{(*)} \right\} \right) \right\}
 
   Then
 
   .. math::
 
-    \theta^{(i+1)} = \begin{cases} \theta^{(*)} & \text{ if } Z < \alpha \\ \theta^{(i)} & \text{ else } \end{cases}
-
-  where :math:`Z \sim U(0,1)`.
+    \theta^{(i+1)} = \begin{cases} \theta^{(*)} & \text{ with probability } \alpha \\ \theta^{(i)} & \text{ else } \end{cases}
 
 The algorithm stops when the number of draws reaches ``n_burnin_draws`` + ``n_keep_draws``, and returns the final ``n_keep_draws`` number of draws.
 

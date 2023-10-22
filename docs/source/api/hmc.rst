@@ -1,8 +1,10 @@
-.. Copyright (c) 2011-2022 Keith O'Hara
+.. Copyright (c) 2011-2023 Keith O'Hara
 
    Distributed under the terms of the Apache License, Version 2.0.
 
    The full license is in the file LICENSE, distributed with this software.
+
+.. _hamiltonian-monte-carlo:
 
 Hamiltonian Monte Carlo
 =======================
@@ -62,9 +64,7 @@ Let :math:`\theta^{(i)}` denote a :math:`d`-dimensional vector of stored values 
 
   .. math::
 
-    \theta^{(i+1)} = \begin{cases} \theta^{(*)} & \text{ if } Z < \alpha \\ \theta^{(i)} & \text{ else } \end{cases}
-
-  where :math:`Z \sim U(0,1)`.
+    \theta^{(i+1)} = \begin{cases} \theta^{(*)} & \text{ with probability } \alpha \\ \theta^{(i)} & \text{ else } \end{cases}
 
 The algorithm stops when the number of draws reaches ``n_burnin_draws`` + ``n_keep_draws``, and returns the final ``n_keep_draws`` number of draws.
 
@@ -114,7 +114,7 @@ Additional settings:
 
 - ``Mat_t hmc_settings.precond_mat``: preconditioning matrix for the leapfrog step.
 
-  - Default value: diagonal matrix.
+  - Default value: a diagonal matrix.
 
 ----
 

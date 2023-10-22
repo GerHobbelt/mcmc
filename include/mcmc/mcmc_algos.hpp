@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2011-2022 Keith O'Hara
+  ##   Copyright (C) 2011-2023 Keith O'Hara
   ##
   ##   This file is part of the MCMC C++ library.
   ##
@@ -24,6 +24,7 @@
 #include "rwmh.hpp"
 #include "mala.hpp"
 #include "hmc.hpp"
+#include "nuts.hpp"
 #include "rmhmc.hpp"
 
 #include "aees.hpp"

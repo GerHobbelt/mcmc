@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2011-2022 Keith O'Hara
+  ##   Copyright (C) 2011-2023 Keith O'Hara
   ##
   ##   This file is part of the MCMC C++ library.
   ##
@@ -32,7 +32,7 @@
 #endif
 
 #ifndef MCMC_VERSION_MINOR
-    #define MCMC_VERSION_MINOR 0
+    #define MCMC_VERSION_MINOR 1
 #endif
 
 #ifndef MCMC_VERSION_PATCH
@@ -152,8 +152,8 @@ namespace mcmc
 #define BMO_ENABLE_EIGEN_WRAPPERS
 #endif
 
-template<typename eT, int iTr, int iTc>
-using EigenMat = Eigen::Matrix<eT,iTr,iTc>;
+    // template<typename eT, int iTr, int iTc>
+    // using EigenMat = Eigen::Matrix<eT,iTr,iTc>;
 
 namespace mcmc
 {
@@ -210,9 +210,27 @@ namespace mcmc
     #define BMO_RNG_ENGINE_TYPE mcmc::rand_engine_t
 #endif
 
+#ifndef BMO_CORE_TYPES
+    #define BMO_CORE_TYPES
+
+    namespace bmo
+    {
+        using fp_t = MCMC_FPN_TYPE;
+
+        using ColVec_t = mcmc::ColVec_t;
+        using RowVec_t = mcmc::RowVec_t;
+        using ColVecInt_t = mcmc::ColVecInt_t;
+        using RowVecInt_t = mcmc::RowVecInt_t;
+        using ColVecUInt_t = mcmc::ColVecUInt_t;
+
+        using Mat_t = mcmc::Mat_t;
+    }
+#endif
+
+#include "BaseMatrixOps/include/BaseMatrixOps.hpp"
+
 namespace mcmc
 {
-    #include "BaseMatrixOps/include/BaseMatrixOps.hpp"
     using Cube_t = bmo::Cube_t<fp_t>;
 }
 

@@ -19,10 +19,10 @@
   ################################################################################*/
  
 /*
- * Sampling from a Gaussian distribution using HMC
+ * Sampling from a Gaussian distribution using NUTS
  */
 
-// $CXX -Wall -std=c++11 -O3 -mcpu=native -ffp-contract=fast -I$ARMA_INCLUDE_PATH -I./../../include/ hmc_normal.cpp -o hmc_normal.out -L./../.. -lmcmc
+// $CXX -Wall -std=c++11 -O3 -mcpu=native -ffp-contract=fast -I$ARMA_INCLUDE_PATH -I./../../include/ nuts_normal.cpp -o nuts_normal.out -L./../.. -lmcmc
 
 #define MCMC_ENABLE_ARMA_WRAPPERS
 #include "mcmc.hpp"
@@ -90,19 +90,18 @@ int main()
   
     mcmc::algo_settings_t settings;
   
-    settings.hmc_settings.step_size = 0.08;
-    settings.hmc_settings.n_burnin_draws = 2000;
-    settings.hmc_settings.n_keep_draws = 2000;
+    settings.nuts_settings.n_burnin_draws = 2000;
+    settings.nuts_settings.n_keep_draws = 2000;
 
     //
   
     arma::mat draws_out;
-    mcmc::hmc(initial_val, log_target_dens, draws_out, &dta, settings);
+    mcmc::nuts(initial_val, log_target_dens, draws_out, &dta, settings);
 
     //
   
-    std::cout << "hmc mean:\n" << arma::mean(draws_out) << std::endl;
-    std::cout << "acceptance rate: " << static_cast<double>(settings.hmc_settings.n_accept_draws) / settings.hmc_settings.n_keep_draws << std::endl;
+    std::cout << "nuts mean:\n" << arma::mean(draws_out) << std::endl;
+    std::cout << "acceptance rate: " << static_cast<double>(settings.nuts_settings.n_accept_draws) / settings.nuts_settings.n_keep_draws << std::endl;
 
     //
  
