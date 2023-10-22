@@ -42,7 +42,7 @@
 //
 
 #ifdef _MSC_VER
-    #error MCMCLib: MSVC is not supported
+//    #error MCMCLib: MSVC is not supported
 #endif
 
 //
@@ -81,14 +81,94 @@
     #define MCMC_FPN_TYPE double
 #endif
 
-#if MCMC_FPN_TYPE == float
+#define MCMC_FPN_TYPE_CFG_CODE(type)   MCMC_FPN_TYPE_##type
+#define MCMC_FPN_TYPE_float  1
+#define MCMC_FPN_TYPE_double 2
+
+#if (MCMC_FPN_TYPE_CFG_CODE(MCMC_FPN_TYPE) == MCMC_FPN_TYPE_float)
     #undef MCMC_FPN_SMALL_NUMBER
     #define MCMC_FPN_SMALL_NUMBER fp_t(1e-05)
-#elif MCMC_FPN_TYPE == double
+#elif (MCMC_FPN_TYPE_CFG_CODE(MCMC_FPN_TYPE) == MCMC_FPN_TYPE_double) || 1
     #undef MCMC_FPN_SMALL_NUMBER
     #define MCMC_FPN_SMALL_NUMBER fp_t(1e-08)
 #else
-    #error floating-point number type must be 'float' or 'double'
+    #error "floating-point number type must be 'float' or 'double'"
+#endif
+
+//
+
+// default to using armadillo:
+#if !defined( MCMC_ENABLE_ARMA_WRAPPERS ) && !defined( MCMC_ENABLE_EIGEN_WRAPPERS )
+#define MCMC_ENABLE_ARMA_WRAPPERS   1
+#endif
+
+//
+
+#ifdef MCMC_ENABLE_ARMA_WRAPPERS
+#ifdef USE_RCPP_ARMADILLO
+#include <RcppArmadillo.h>
+#else
+#ifndef ARMA_DONT_USE_WRAPPER
+#define ARMA_DONT_USE_WRAPPER
+#endif
+
+#include "armadillo"
+#endif
+
+#ifdef MCMC_USE_OPENMP
+#ifndef ARMA_USE_OPENMP
+#define ARMA_USE_OPENMP
+#endif
+#endif
+
+#ifdef MCMC_DONT_USE_OPENMP
+#ifndef ARMA_DONT_USE_OPENMP
+#define ARMA_DONT_USE_OPENMP
+#endif
+#endif
+
+#ifndef BMO_ENABLE_ARMA_WRAPPERS
+#define BMO_ENABLE_ARMA_WRAPPERS
+#endif
+
+namespace mcmc
+{
+	using fp_t = MCMC_FPN_TYPE;
+
+	using ColVec_t = arma::Col<fp_t>;
+	using RowVec_t = arma::Row<fp_t>;
+	using ColVecInt_t = arma::Col<int>;
+	using RowVecInt_t = arma::Row<int>;
+	using ColVecUInt_t = arma::Col<unsigned long long>;
+
+	using Mat_t = arma::Mat<fp_t>;
+}
+#elif defined MCMC_ENABLE_EIGEN_WRAPPERS
+#include <iostream>
+#include <random>
+#include <Eigen/Dense>
+
+#ifndef BMO_ENABLE_EIGEN_WRAPPERS
+#define BMO_ENABLE_EIGEN_WRAPPERS
+#endif
+
+template<typename eT, int iTr, int iTc>
+using EigenMat = Eigen::Matrix<eT,iTr,iTc>;
+
+namespace mcmc
+{
+	using fp_t = MCMC_FPN_TYPE;
+
+	using ColVec_t = Eigen::Matrix<fp_t, Eigen::Dynamic, 1>;
+	using RowVec_t = Eigen::Matrix<fp_t, 1, Eigen::Dynamic>;
+	using ColVecInt_t = Eigen::Matrix<int, Eigen::Dynamic, 1>;
+	using RowVecInt_t = Eigen::Matrix<int, 1, Eigen::Dynamic>;
+	using ColVecUInt_t = Eigen::Matrix<size_t, Eigen::Dynamic, 1>;
+
+	using Mat_t = Eigen::Matrix<fp_t, Eigen::Dynamic, Eigen::Dynamic>;
+}
+#else
+#error MCMCLib: you must enable the Armadillo OR Eigen wrappers
 #endif
 
 //
@@ -107,67 +187,9 @@ namespace mcmc
 
 //
 
-#ifdef MCMC_ENABLE_ARMA_WRAPPERS
-    #ifdef USE_RCPP_ARMADILLO
-        #include <RcppArmadillo.h>
-    #else
-        #ifndef ARMA_DONT_USE_WRAPPER
-            #define ARMA_DONT_USE_WRAPPER
-        #endif
-        
-        #include "armadillo"
-    #endif
-
-    #ifdef MCMC_USE_OPENMP
-        #ifndef ARMA_USE_OPENMP
-            #define ARMA_USE_OPENMP
-        #endif
-    #endif
-
-    #ifdef MCMC_DONT_USE_OPENMP
-        #ifndef ARMA_DONT_USE_OPENMP
-            #define ARMA_DONT_USE_OPENMP
-        #endif
-    #endif
-
-    #ifndef BMO_ENABLE_ARMA_WRAPPERS
-        #define BMO_ENABLE_ARMA_WRAPPERS
-    #endif
-
-    namespace mcmc
-    {
-        using ColVec_t = arma::Col<fp_t>;
-        using RowVec_t = arma::Row<fp_t>;
-        using ColVecInt_t = arma::Col<int>;
-        using RowVecInt_t = arma::Row<int>;
-        using ColVecUInt_t = arma::Col<unsigned long long>;
-
-        using Mat_t = arma::Mat<fp_t>;
-    }
-#elif defined MCMC_ENABLE_EIGEN_WRAPPERS
-    #include <iostream>
-    #include <random>
-    #include <Eigen/Dense>
-
-    #ifndef BMO_ENABLE_EIGEN_WRAPPERS
-        #define BMO_ENABLE_EIGEN_WRAPPERS
-    #endif
-
-    template<typename eT, int iTr, int iTc>
-    using EigenMat = Eigen::Matrix<eT,iTr,iTc>;
-
-    namespace mcmc
-    {
-        using ColVec_t = Eigen::Matrix<fp_t, Eigen::Dynamic, 1>;
-        using RowVec_t = Eigen::Matrix<fp_t, 1, Eigen::Dynamic>;
-        using ColVecInt_t = Eigen::Matrix<int, Eigen::Dynamic, 1>;
-        using RowVecInt_t = Eigen::Matrix<int, 1, Eigen::Dynamic>;
-        using ColVecUInt_t = Eigen::Matrix<size_t, Eigen::Dynamic, 1>;
-
-        using Mat_t = Eigen::Matrix<fp_t, Eigen::Dynamic, Eigen::Dynamic>;
-    }
-#else
-    #error MCMCLib: you must enable the Armadillo OR Eigen wrappers
+// default to using armadillo:
+#if !defined( MCMC_ENABLE_ARMA_WRAPPERS ) && !defined( MCMC_ENABLE_EIGEN_WRAPPERS )
+#define MCMC_ENABLE_ARMA_WRAPPERS   1
 #endif
 
 //
