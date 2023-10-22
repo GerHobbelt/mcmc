@@ -1,8 +1,10 @@
-.. Copyright (c) 2011-2022 Keith O'Hara
+.. Copyright (c) 2011-2023 Keith O'Hara
 
    Distributed under the terms of the Apache License, Version 2.0.
 
    The full license is in the file LICENSE, distributed with this software.
+
+.. _differential-evolution:
 
 Differential Evolution
 ======================
@@ -38,9 +40,7 @@ Let :math:`\boldsymbol{\theta}_k^{(i)}` denote a :math:`N_p \times d`-dimensiona
 
   .. math::
 
-    \theta^{(i+1)} = \begin{cases} \theta^{(*)} & \text{ if } Z < \alpha \\ \theta^{(i)} & \text{ else } \end{cases}
-
-  where :math:`Z \sim U(0,1)`.
+    \theta^{(i+1)} = \begin{cases} \theta^{(*)} & \text{ with probability } \alpha \\ \theta^{(i)} & \text{ else } \end{cases}
 
 The algorithm stops when the number of draws reaches ``n_burnin_draws`` + ``n_keep_draws``, and returns the final ``n_keep_draws`` number of draws (in the form a three-dimensional array).
 
