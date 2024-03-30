@@ -98,6 +98,9 @@
 //
 
 // default to using armadillo:
+#if !defined( MCMC_ENABLE_ARMA_WRAPPERS ) && !defined( MCMC_ENABLE_EIGEN_WRAPPERS ) && defined( BUILD_MONOLITHIC ) /* our monolithic build prefers Eigen over Armadillo */
+#define MCMC_ENABLE_EIGEN_WRAPPERS   1
+#endif
 #if !defined( MCMC_ENABLE_ARMA_WRAPPERS ) && !defined( MCMC_ENABLE_EIGEN_WRAPPERS )
 #define MCMC_ENABLE_ARMA_WRAPPERS   1
 #endif

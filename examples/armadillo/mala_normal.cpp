@@ -70,6 +70,11 @@ double log_target_dens(const arma::vec& vals_inp, arma::vec* grad_out, void* ll_
     return ll_dens(vals_inp,grad_out,ll_data);
 }
 
+
+#if defined(BUILD_MONOLITHIC)
+#define main  mcmc_mala_normal_example_main
+#endif
+
 int main()
 {
     const int n_data = 1000;

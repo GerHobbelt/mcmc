@@ -64,6 +64,11 @@ target_log_kernel(const arma::vec& vals_inp, void* target_data)
     return gaussian_mixture(vals_inp, dta->weights, dta->mu, dta->sig_sq);
 }
 
+
+#if defined(BUILD_MONOLITHIC)
+#define main  mcmc_aees_mixture_example_main
+#endif
+
 int main()
 {
     const int n_vals = 2;

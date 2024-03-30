@@ -81,6 +81,11 @@ double log_target_dens(const arma::vec& vals_inp, void* ll_data)
     return ll_dens(vals_inp,ll_data) + log_pr_dens(vals_inp,ll_data);
 }
 
+
+#if defined(BUILD_MONOLITHIC)
+#define main  mcmc_de_normal_mean_example_main
+#endif
+
 int main()
 {
     const int n_data = 100;
