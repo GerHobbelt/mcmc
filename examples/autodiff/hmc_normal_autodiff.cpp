@@ -30,6 +30,8 @@
 #include <autodiff/forward/real.hpp>
 #include <autodiff/forward/real/eigen.hpp>
 
+namespace {
+
 inline
 Eigen::VectorXd
 eigen_randn_colvec(size_t nr)
@@ -84,6 +86,13 @@ double log_target_dens(const Eigen::VectorXd& vals_inp, Eigen::VectorXd* grad_ou
 {
     return ll_dens(vals_inp,grad_out,ll_data);
 }
+
+}
+
+
+#if defined(BUILD_MONOLITHIC)
+#define main  mcmc_hmc_normal_autodiff_example_main
+#endif
 
 int main()
 {

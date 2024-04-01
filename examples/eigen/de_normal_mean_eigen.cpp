@@ -27,6 +27,8 @@
 #define MCMC_ENABLE_EIGEN_WRAPPERS
 #include "mcmc.hpp"
 
+namespace {
+
 inline
 Eigen::VectorXd
 eigen_randn_colvec(size_t nr)
@@ -90,7 +92,14 @@ double log_target_dens(const Eigen::VectorXd& vals_inp, void* ll_data)
 {
     return ll_dens(vals_inp,ll_data) + log_pr_dens(vals_inp,ll_data);
 }
- 
+
+}
+
+
+#if defined(BUILD_MONOLITHIC)
+#define main  mcmc_de_normal_mean_eigen_example_main
+#endif
+
 int main()
 {
     const int n_data = 100;

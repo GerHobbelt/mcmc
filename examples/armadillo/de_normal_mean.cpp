@@ -27,6 +27,8 @@
 #define MCMC_ENABLE_ARMA_WRAPPERS
 #include "mcmc.hpp"
 
+namespace {
+
 struct norm_data_t {
     double sigma;
     arma::vec x;
@@ -79,6 +81,8 @@ double log_pr_dens(const arma::vec& vals_inp, void* ll_data)
 double log_target_dens(const arma::vec& vals_inp, void* ll_data)
 {
     return ll_dens(vals_inp,ll_data) + log_pr_dens(vals_inp,ll_data);
+}
+
 }
 
 

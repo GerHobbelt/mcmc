@@ -27,6 +27,8 @@
 #define MCMC_ENABLE_EIGEN_WRAPPERS
 #include "mcmc.hpp"
 
+namespace {
+
 struct mixture_data_t { 
     Eigen::MatrixXd mu;
     Eigen::VectorXd sig_sq;
@@ -63,6 +65,13 @@ target_log_kernel(const Eigen::VectorXd& vals_inp, void* target_data)
 
     return gaussian_mixture(vals_inp, dta->weights, dta->mu, dta->sig_sq);
 }
+
+}
+
+
+#if defined(BUILD_MONOLITHIC)
+#define main  mcmc_aees_mixture_eigen_example_main
+#endif
 
 int main()
 {

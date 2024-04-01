@@ -27,6 +27,8 @@
 #define MCMC_ENABLE_ARMA_WRAPPERS
 #include "mcmc.hpp"
 
+namespace {
+
 struct mixture_data_t { 
     arma::mat mu;
     arma::vec sig_sq;
@@ -62,6 +64,8 @@ target_log_kernel(const arma::vec& vals_inp, void* target_data)
     mixture_data_t* dta = reinterpret_cast<mixture_data_t*>(target_data);
 
     return gaussian_mixture(vals_inp, dta->weights, dta->mu, dta->sig_sq);
+}
+
 }
 
 
